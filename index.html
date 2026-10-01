@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<title>Healthy Sounna Stock</title>
+<meta name="description" content="Gestion de l'inventaire Healthy Sounna">
+<meta name="theme-color" content="#1A1A1A">
+<meta name="robots" content="noindex, nofollow">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<style>
+:root{
+  --noir:#1A1A1A; --creme:#FAF6EC; --lime:#A1BC2E;
+  --creme-2:#F3EDDD; --ligne:#E4DCC6; --gris:#6E6A5E;
+  --rouge:#C0392B; --ambre:#B7791F;
+  --radius:14px;
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Segoe UI,Calibri,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%}
+body{background:var(--creme);color:var(--noir);min-height:100%;font-size:16px;line-height:1.4;
+  padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font:inherit;color:inherit}
+
+/* ===== En-tête ===== */
+header{background:var(--noir);color:var(--creme);padding:calc(14px + env(safe-area-inset-top)) 16px 14px;
+  position:sticky;top:0;z-index:20;box-shadow:0 2px 10px rgba(26,26,26,.25)}
+.h-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.h-title{font-size:17px;font-weight:700;letter-spacing:.3px}
+.h-title small{display:block;font-size:11px;font-weight:600;color:var(--lime);letter-spacing:1.5px;text-transform:uppercase}
+#btnMenu{width:42px;height:42px;border-radius:10px;background:rgba(250,246,236,.08);color:var(--creme);
+  font-size:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.h-stats{display:flex;gap:8px;margin-top:12px}
+.stat{flex:1;background:rgba(250,246,236,.07);border:1px solid rgba(250,246,236,.12);border-radius:10px;padding:8px 10px;text-align:center}
+.stat b{display:block;font-size:16px;color:var(--lime);font-variant-numeric:tabular-nums}
+.stat span{font-size:10.5px;color:rgba(250,246,236,.7);text-transform:uppercase;letter-spacing:.6px}
+
+/* ===== Barre recherche + filtres ===== */
+.tools{position:sticky;top:0;z-index:15;background:var(--creme);padding:12px 16px 8px;border-bottom:1px solid var(--ligne)}
+.search-row{display:flex;gap:8px}
+#search{flex:1;height:46px;border:1.5px solid var(--ligne);border-radius:12px;padding:0 14px;background:#fff;outline:none}
+#search:focus{border-color:var(--lime)}
+#btnClear{width:46px;height:46px;border-radius:12px;border:1.5px solid var(--ligne);background:#fff;font-size:17px;color:var(--gris);display:none}
+/* ===== Accueil : cartes catégories ===== */
+.alert-banner{width:100%;margin-top:14px;background:#FDF2E3;border:1.5px solid #EAD3A8;border-radius:var(--radius);
+  padding:13px 15px;display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left}
+.alert-banner span{font-weight:700;font-size:14px;color:var(--ambre)}
+.alert-banner em{font-style:normal;font-size:11.5px;color:var(--ambre);opacity:.85;white-space:nowrap}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.cat-card{background:#fff;border:1px solid var(--ligne);border-radius:var(--radius);padding:13px 14px;text-align:left;
+  min-height:104px;display:flex;flex-direction:column;gap:4px;transition:transform .08s}
+.cat-card:active{transform:scale(.97)}
+.cc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+.cc-ico{font-size:22px}
+.cc-warn{font-size:11px;font-weight:800;color:var(--ambre);background:#FDF2E3;padding:2px 7px;border-radius:6px}
+.cat-card b{font-size:14px;line-height:1.25}
+.cat-card span{font-size:11.5px;color:var(--gris)}
+.backbar{display:flex;align-items:center;gap:12px;margin:16px 2px 10px}
+.backbar button{height:42px;padding:0 14px;border-radius:11px;background:var(--noir);color:var(--creme);font-weight:700;font-size:13px}
+.backbar h3{font-size:15.5px}
+.backbar h3 em{font-style:normal;color:var(--gris);font-weight:600;font-size:13px}
+.backbar button.backbar-del{width:42px;height:42px;padding:0;background:#FBEAE7;color:var(--rouge);font-size:16px;flex-shrink:0;margin-left:auto}
+.cat-stats{background:#fff;border:1px solid var(--ligne);border-radius:11px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--gris)}
+.cat-stats b{color:var(--noir);font-variant-numeric:tabular-nums}
+
+/* ===== Liste produits ===== */
+main{padding:6px 16px 90px}
+.cat-head{font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--gris);
+  margin:20px 2px 8px;display:flex;justify-content:space-between;align-items:baseline}
+.cat-head em{font-style:normal;font-weight:600;font-size:11.5px}
+.card{background:#fff;border:1px solid var(--ligne);border-radius:var(--radius);padding:12px 14px;margin-bottom:9px;
+  display:flex;align-items:center;gap:10px}
+.card.zero{opacity:.55}
+.p-info{flex:1;min-width:0}
+.p-name{font-weight:600;font-size:14.5px;line-height:1.3;word-break:break-word}
+.edit-hint{font-size:12px;color:var(--lime);opacity:.9}
+.p-meta{font-size:12px;color:var(--gris);margin-top:3px}
+.p-meta b{color:var(--noir);font-weight:600}
+.p-meta .pa{color:#A8A390;font-size:11px}
+.badges{margin-top:5px;display:flex;flex-wrap:wrap;gap:5px}
+.badge{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:6px;letter-spacing:.3px}
+.b-low{background:#FDF2E3;color:var(--ambre)}
+.b-out{background:#FBEAE7;color:var(--rouge)}
+.b-ddm{background:#FBEAE7;color:var(--rouge)}
+.b-ddmsoon{background:#FDF2E3;color:var(--ambre)}
+.b-dup{background:#F0F4DC;color:#5C701A}
+.b-promo{background:var(--noir);color:var(--lime)}
+.p-meta s,.s-meta s{color:#A8A390;text-decoration:line-through;font-weight:400}
+.qty-box{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0}
+.qty-val{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;min-width:34px;text-align:center}
+.qty-btns{display:flex;gap:8px}
+.qb{width:46px;height:46px;border-radius:12px;font-size:24px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  transition:transform .08s}
+.qb:active{transform:scale(.92)}
+.qb.minus{background:var(--noir);color:var(--creme)}
+.qb.plus{background:var(--lime);color:var(--noir)}
+.qb:disabled{opacity:.3}
+.empty{text-align:center;color:var(--gris);padding:50px 20px;font-size:14.5px}
+/* ===== Photo choisie a la main, dans la fiche produit ===== */
+.photo-ligne{display:flex;gap:12px;align-items:center}
+.photo-apercu{width:78px;height:78px;flex-shrink:0;border-radius:10px;background:#F6F1E4;border:1px solid var(--ligne);
+  display:flex;align-items:center;justify-content:center;font-size:26px;color:#C8C0AA;overflow:hidden}
+.photo-apercu img{width:100%;height:100%;object-fit:contain}
+.photo-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.btn-photo{background:var(--noir);color:var(--creme);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700}
+.btn-photo.retirer{background:#FBEAE7;color:var(--rouge)}
+#fPhotoEtat{font-size:11.5px;color:var(--gris)}
+/* ===== Vignettes produit (packshots du catalogue) ===== */
+.vign{width:58px;height:58px;flex-shrink:0;border-radius:9px;background:#F6F1E4;object-fit:contain;padding:3px}
+.vign-vide{display:flex;align-items:center;justify-content:center;font-size:23px;color:#C8C0AA}
+/* ===== Affichage en deux colonnes ===== */
+.grille2{display:grid;grid-template-columns:1fr 1fr;gap:9px;align-items:start}
+.grille2 .card{flex-direction:column;align-items:stretch;text-align:center;padding:10px;margin-bottom:0;gap:8px}
+.grille2 .vign{width:100%;height:104px;padding:6px}
+.grille2 .p-info{flex:none}
+.grille2 .p-name{font-size:13px}
+.grille2 .p-meta{font-size:11.5px;margin-top:2px}
+.grille2 .badges{justify-content:center;gap:4px}
+.grille2 .badge{font-size:9.5px;padding:2px 6px}
+.grille2 .qty-box{flex-direction:row;justify-content:center;align-items:center;gap:10px}
+.grille2 .qb{width:42px;height:42px;font-size:22px}
+
+
+/* ===== Recettes ===== */
+.sales-card{width:100%;margin-top:12px;background:var(--noir);border-radius:var(--radius);padding:14px 16px;
+  display:flex;justify-content:space-between;align-items:center;text-align:left;color:var(--creme)}
+.sales-card b{display:block;font-size:19px;color:var(--lime);font-variant-numeric:tabular-nums;margin-top:2px}
+.sc-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;color:rgba(250,246,236,.7);font-weight:700}
+.sc-right{text-align:right}
+.sc-right em{display:block;font-style:normal;font-size:10.5px;color:rgba(250,246,236,.55);margin-top:2px}
+.ptabs{display:flex;gap:6px;margin:4px 0 12px}
+.ptab{flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid var(--ligne);background:#fff;font-size:12.5px;font-weight:700;color:var(--gris)}
+.ptab.on{background:var(--noir);border-color:var(--noir);color:var(--lime)}
+.s-kpis{display:flex;gap:8px;margin-bottom:10px}
+.s-kpi{flex:1;background:#fff;border:1px solid var(--ligne);border-radius:11px;padding:10px;text-align:center}
+.s-kpi b{display:block;font-size:16px;font-variant-numeric:tabular-nums}
+.s-kpi.lime b{color:#5C701A}
+.s-kpi span{font-size:9.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--gris)}
+.s-warn{background:#FDF2E3;border:1px solid #EAD3A8;color:var(--ambre);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:600;margin-bottom:10px}
+.s-row{background:#fff;border:1px solid var(--ligne);border-radius:11px;padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;gap:10px}
+.s-info{flex:1;min-width:0}
+.s-name{font-weight:600;font-size:13.5px}
+.s-meta{font-size:11.5px;color:var(--gris);margin-top:2px}
+.s-del{width:44px;height:44px;border-radius:11px;background:#FBEAE7;color:var(--rouge);font-size:15px;font-weight:700;flex-shrink:0}
+
+
+/* ===== Sélecteur catégorie maison ===== */
+.selectlike{width:100%;height:48px;border:1.5px solid var(--ligne);border-radius:11px;padding:0 13px;background:#fff;
+  color:var(--noir);display:flex;align-items:center;justify-content:space-between;font-size:15px;text-align:left}
+.selectlike em{font-style:normal;color:#5C701A;font-size:13px}
+.cat-opt{display:flex;align-items:center;gap:12px;width:100%;padding:15px 6px;border-bottom:1px solid var(--ligne);font-size:15px;font-weight:600;text-align:left}
+.cat-opt:last-child{border-bottom:none}
+.cat-opt.on{color:#5C701A}
+.cat-opt .co-ico{font-size:18px;width:26px;text-align:center}
+/* ===== Dialogue maison ===== */
+.overlay.center{align-items:center}
+.dialog{background:#fff;border-radius:18px;padding:22px 20px 18px;width:calc(100% - 48px);max-width:340px;
+  box-shadow:0 20px 60px rgba(26,26,26,.35);animation:up .18s ease}
+.dialog h3{font-size:17px;font-weight:800;margin-bottom:8px}
+.dialog p{font-size:13.5px;color:#555;line-height:1.5;margin-bottom:14px}
+.dialog input{width:100%;height:48px;border:1.5px solid var(--ligne);border-radius:11px;padding:0 13px;background:#fff;
+  color:var(--noir);outline:none;margin-bottom:14px;display:none}
+.dialog input:focus{border-color:var(--lime)}
+.dlg-btns{display:flex;gap:9px}
+.dlg-btns button{flex:1;height:48px;border-radius:12px;font-size:14.5px;font-weight:700}
+#dlgCancel{border:1.5px solid var(--ligne);color:var(--gris);background:transparent}
+#dlgOk{background:var(--noir);color:var(--lime)}
+#dlgOk.danger{background:var(--rouge);color:#FBEAE7}
+/* ===== Graphique 7 jours ===== */
+.chart-card{background:var(--noir);border-radius:var(--radius);padding:14px 14px 10px;margin-bottom:12px}
+.chart-title{font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;color:rgba(250,246,236,.65);font-weight:700;margin-bottom:10px}
+.chart{display:flex;align-items:flex-end;gap:7px;height:100px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%}
+.bar-val{font-size:9px;color:var(--lime);font-weight:700;font-variant-numeric:tabular-nums}
+.bar{width:100%;max-width:30px;background:linear-gradient(180deg,#C3D96C,var(--lime));border-radius:5px 5px 2px 2px;min-height:4px}
+.bar-col span{font-size:9.5px;color:rgba(250,246,236,.55);text-transform:capitalize}
+/* ===== Tri catégorie ===== */
+.sort-row{display:flex;gap:6px;margin:0 0 12px}
+.sort-chip{flex:1;padding:8px 4px;border-radius:9px;border:1.5px solid var(--ligne);background:#fff;font-size:11.5px;font-weight:700;color:var(--gris)}
+.sort-chip.on{background:var(--noir);border-color:var(--noir);color:var(--lime)}
+
+/* ===== FAB ===== */
+#fab{position:fixed;right:18px;bottom:calc(20px + env(safe-area-inset-bottom));width:60px;height:60px;border-radius:18px;
+  background:var(--lime);color:var(--noir);font-size:30px;font-weight:700;box-shadow:0 6px 18px rgba(26,26,26,.3);
+  display:flex;align-items:center;justify-content:center;z-index:25}
+#fab:active{transform:scale(.94)}
+
+/* ===== Modales ===== */
+.overlay{position:fixed;inset:0;background:rgba(26,26,26,.55);z-index:40;display:none;align-items:flex-end;justify-content:center}
+.overlay.open{display:flex}
+.sheet{background:var(--creme);width:100%;max-width:560px;border-radius:22px 22px 0 0;padding:20px 18px calc(24px + env(safe-area-inset-bottom));
+  max-height:92vh;overflow-y:auto;animation:up .22s ease}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.sheet h2{font-size:17px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.sheet h2 button{font-size:22px;color:var(--gris);width:40px;height:40px}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gris);margin-bottom:5px}
+.field input,.field select{width:100%;height:48px;border:1.5px solid var(--ligne);border-radius:11px;padding:0 13px;background:#fff;outline:none}
+.field input:focus,.field select:focus{border-color:var(--lime)}
+.row2{display:flex;gap:10px}.row2 .field{flex:1}
+.marge-hint{font-size:12.5px;font-weight:700;color:#5C701A;background:#F0F4DC;border-radius:9px;padding:9px 12px;margin-bottom:13px;display:none}
+.btn{width:100%;height:52px;border-radius:13px;font-size:15.5px;font-weight:700;margin-top:6px}
+.btn-main{background:var(--noir);color:var(--lime)}
+.btn-sub{background:transparent;border:1.5px solid var(--ligne);color:var(--gris);margin-top:10px}
+.btn-danger{background:transparent;border:1.5px solid #E8C8C3;color:var(--rouge);margin-top:10px}
+.menu-item{display:flex;align-items:center;gap:12px;width:100%;padding:15px 6px;border-bottom:1px solid var(--ligne);font-size:15px;font-weight:600;text-align:left}
+.menu-item:last-child{border-bottom:none}
+.menu-item span:first-child{font-size:19px;width:26px;text-align:center}
+.menu-note{font-size:12px;color:var(--gris);padding:10px 6px 0;line-height:1.5}
+
+/* ===== Toast ===== */
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom));
+  background:var(--noir);color:var(--creme);padding:12px 16px;border-radius:12px;font-size:14px;font-weight:600;
+  display:none;align-items:center;gap:14px;z-index:50;box-shadow:0 6px 20px rgba(26,26,26,.35);max-width:calc(100vw - 32px)}
+#toast.show{display:flex}
+#toast button{color:var(--lime);font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:.5px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-top">
+    <div class="h-title">Healthy Sounna<small>Stock</small></div>
+    <button id="btnMenu" aria-label="Menu">☰</button>
+  </div>
+  <div class="h-stats">
+    <div class="stat"><b id="stRefs">–</b><span>Références</span></div>
+    <div class="stat"><b id="stArts">–</b><span>Articles</span></div>
+    <div class="stat"><b id="stVal">–</b><span>Valeur</span></div>
+  </div>
+</header>
+
+<div class="tools">
+  <div class="search-row">
+    <input id="search" type="search" placeholder="Rechercher un produit, une marque…" autocomplete="off">
+    <button id="btnClear" aria-label="Effacer">✕</button>
+  </div>
+</div>
+
+<main id="list"></main>
+
+<button id="fab" aria-label="Ajouter un produit">+</button>
+
+<!-- Modale ajout / édition -->
+<div class="overlay" id="ovForm">
+  <div class="sheet">
+    <h2><span id="formTitle">Ajouter un produit</span><button data-close>✕</button></h2>
+    <div class="field"><label>Nom du produit *</label><input id="fName"></div>
+    <div class="row2">
+      <div class="field"><label>Catégorie</label><button type="button" class="selectlike" id="fCat"><span id="fCatVal">-</span><em>▾</em></button></div>
+      <div class="field"><label>Marque</label><input id="fBrand" placeholder="Healthy Sounna"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>Quantité *</label><input id="fQty" type="number" inputmode="numeric" min="0" step="1"></div>
+      <div class="field"><label>Prix vente (€)</label><input id="fPrice" type="number" inputmode="decimal" min="0" step="0.01"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>Prix promo (€)</label><input id="fPromo" type="number" inputmode="decimal" min="0" step="0.01" placeholder="aucune"></div>
+      <div class="field"><label>Prix d'achat HT (€)</label><input id="fCost" type="number" inputmode="decimal" min="0" step="0.01" placeholder="optionnel"></div>
+    </div>
+    <div class="field"><label>DDM (ex : 06/2027)</label><input id="fDdm" placeholder="MM/AAAA"></div>
+    <div id="fMarge" class="marge-hint"></div>
+    <div class="field"><label>Note</label><input id="fNote"></div>
+    <div class="field"><label>Photo</label>
+      <div class="photo-ligne">
+        <div class="photo-apercu" id="fPhotoApercu"><span>📷</span></div>
+        <div class="photo-actions">
+          <button type="button" class="btn-photo" id="btnPhotoChoisir">Choisir une photo</button>
+          <button type="button" class="btn-photo retirer" id="btnPhotoRetirer" style="display:none">Retirer</button>
+          <small id="fPhotoEtat"></small>
+        </div>
+      </div>
+      <input type="file" id="filePhoto" accept="image/*" style="display:none">
+    </div>
+    <button class="btn btn-main" id="btnSave">Enregistrer</button>
+    <button class="btn btn-danger" id="btnDelete" style="display:none">Supprimer ce produit</button>
+  </div>
+</div>
+
+<!-- Menu -->
+<div class="overlay" id="ovMenu">
+  <div class="sheet">
+    <h2>Menu<button data-close>✕</button></h2>
+    <button class="menu-item" id="mColonnes"><span>🖼️</span> <span id="mColonnesTexte">Affichage : 1 colonne</span></button>
+    <button class="menu-item" id="mFusion"><span>➕</span> Ajouter les nouveaux produits du catalogue</button>
+    <button class="menu-item" id="mExportJson"><span>💾</span> Sauvegarde complète (JSON)</button>
+    <button class="menu-item" id="mExportCsv"><span>📄</span> Exporter le stock (CSV)</button>
+    <button class="menu-item" id="mExportVentes"><span>💰</span> Exporter les ventes (CSV)</button>
+    <button class="menu-item" id="mImport"><span>📥</span> Restaurer une sauvegarde</button>
+    <button class="menu-item" id="mZero"><span>🧹</span> Remettre tout le stock à zéro</button>
+    <button class="menu-item" id="mReset"><span>♻️</span> Réinitialiser (liste de produits d'origine, tout à 0)</button>
+    <p class="menu-note">Conseil : fais une sauvegarde JSON régulièrement (une fois par semaine) et garde le fichier dans ton Drive ou WhatsApp. C'est ton filet de sécurité si tu changes de téléphone.<br><br>Outil offert par <b>Fervia</b></p>
+    <input type="file" id="fileImport" accept=".json" style="display:none">
+  </div>
+</div>
+
+<!-- Feuille choix catégorie -->
+<div class="overlay" id="ovCat">
+  <div class="sheet">
+    <h2>Catégorie<button data-close>✕</button></h2>
+    <div id="catList"></div>
+  </div>
+</div>
+
+<!-- Dialogue maison -->
+<div class="overlay center" id="ovDialog">
+  <div class="dialog">
+    <h3 id="dlgTitle"></h3>
+    <p id="dlgMsg"></p>
+    <input id="dlgInput" autocomplete="off">
+    <div class="dlg-btns">
+      <button id="dlgCancel">Annuler</button>
+      <button id="dlgOk">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"><span id="toastMsg"></span><button id="toastUndo">Annuler</button></div>
+
+<script src="./data.js"></script>
+<script src="./photos.js"></script>
+<script src="./app.js"></script>
+<script>
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  navigator.serviceWorker.register('./sw.js').catch(function(){});
+}
+</script>
+</body>
+</html>
