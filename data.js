@@ -214,6 +214,11 @@ var SEED_DATA = [
 {"cat":"Divers","name":"Shaker en plastique 600 ml","brand":"Purasana","qty":0,"price":5,"ddm":"","note":""},
 {"cat":"Divers","name":"Économiseur d'eau","brand":"Wodow","qty":0,"price":15,"ddm":"","note":""},
 {"cat":"Divers","name":"Dentifrice en poudre Siwakii 50 g","brand":"Healthy Sounna","qty":0,"price":7,"ddm":"","note":""},
+{"cat":"Miels & Épicerie","name":"Propolis en poudre 100 g","brand":"Healthy Sounna","qty":0,"price":25,"ddm":"","note":""},
 {"cat":"Médecine prophétique","name":"Siwak","brand":"Aswika","qty":0,"price":2,"ddm":"","note":""},
-{"cat":"Compléments alimentaires","name":"Gélules à la poudre de costus indien 60 gélules","brand":"Nigelle Source","qty":0,"price":12.5,"ddm":"","note":""}
+{"cat":"Huiles","name":"Huile de costus indien 100 ml","brand":"Nigelle Source","qty":0,"price":12.5,"ddm":"","note":""},
+{"cat":"Compléments alimentaires","name":"Gélules à la poudre de costus indien 60 gélules","brand":"Nigelle Source","qty":0,"price":12.5,"ddm":"","note":""},
+{"cat":"Compléments alimentaires","name":"Spiruline Bio 180 comprimés","brand":"Purasana","qty":0,"price":15,"ddm":"","note":""},
+{"cat":"Cosmétiques & Soins","name":"Huile de gingembre 100 ml","brand":"Nigelle Source","qty":0,"price":12.5,"ddm":"","note":""},
+{"cat":"Cosmétiques & Soins","name":"Charbon actif de noix de coco BIO 30 g","brand":"Wadi Shibam","qty":0,"price":8,"ddm":"","note":""}
 ];
