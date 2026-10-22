@@ -1,8 +1,8 @@
 // Monter ce numero a CHAQUE modification d'index.html/app.js/data.js : sinon
 // sw.js ne change pas, le navigateur ne redetecte aucune mise a jour, et le
 // telephone sert l'ancienne version indefiniment.
-var CACHE = 'hsn-stock-v1';
-var ASSETS = ['./', './index.html', './app.js', './data.js', './photos.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './logo-hexagone.png'];
+var CACHE = 'hsn-stock-v2';
+var ASSETS = ['./', './index.html', './app.js', './data.js', './photos.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './logo.png'];
 // Les images produit (img/*.webp) ne sont PAS prechargees : trop nombreuses.
 // Le gestionnaire fetch ci-dessous les met en cache au fur et a mesure qu'elles
 // s'affichent, donc elles restent disponibles hors-ligne une fois vues.
